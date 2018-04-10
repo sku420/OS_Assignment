@@ -1,38 +1,47 @@
-/* 
-	SJF   
-	Rep. 1
-	By:- SK Upadhyay
+/*
+	SJF
+	SK Upadhyay
 */
 
 #include<stdio.h>
-
+#include<ctype.h>
 struct data
 {
-	int burst;
+	char name;
+	char burst;
 }d[50];
-
-void main()
+main()
 	{
 		FILE *f;
-		int i, n=9;	
+		int i=0, count=0;
+		char buf;	
 		f=fopen("CPU_BRUST.txt","r");
-		printf("\t*******************************");
-		printf("\n\t|  PROCESS\t   BURST TIME |\n");
-		for(i=0;i<n;i++)
+		while ((buf=fgetc(f))!=EOF)
 			{
-				fscanf(f,"%d",&d[i].burst);				//Reading BURST_TIME from FILE
-				printf("\t|    P%d", i);				//Generating Process Name-> P0,P1,.......
-				printf("\t\t\t%d     |",d[i].burst);
-				printf("\n");
+				if(isspace(buf)||buf==' '||buf=='\n')
+				{
+					count++;
+				}
 			}
-			printf("\t!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		for(i=0;i<n;i++)
+		printf("\t*****************************************");
+		printf("\n\t|    PROCESS\t \t   BURST TIME\t|\n");
+		fclose(f);
+		f=fopen("CPU_BRUST.txt","r");
+		for(i=0;i<count;i++)
+		{
+			fscanf(f,"%d",&d[i].burst);					//Reading BURST_TIME from FILE
+			d[i].name=i;
+			printf("\t|\tP%d", d[i].name);				//Generating Process Name-> P0,P1,.......
+			printf("\t\t\t%d\t|",d[i].burst);
+			printf("\n");
+		}
+		printf("\t!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		for(i=0;i<count;i++)
+		{
+			if(d[i].burst<0)
 			{
-				if(d[i].burst<0)
-					{
-						printf("\n Invalid input");
-						exit(0);
-					}
+				printf("\n Invalid input");
 			}
-			fclose(f);
+		}
+		
 	}
