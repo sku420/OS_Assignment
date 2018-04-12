@@ -4,6 +4,7 @@
 		SK Upadhyay
 */
 
+
 #include<stdio.h>
 struct data												//STRUCTURE STORES PROCESS
 {
@@ -11,19 +12,25 @@ struct data												//STRUCTURE STORES PROCESS
 	char burst;
 }d[50];
 
+
 main()
 	{
 		FILE *f;
 		int i,j, count=0,swapburst,swapname,tat,wt=0,twt=0;
-		char buf;
+		float avgt, avgw;
+		char buff;
 		
 			
-		f=fopen("CPU_BRUST.txt","r");					//Counting Number of WORDS
-		while ((buf=fgetc(f))!=EOF)
+		f=fopen("CPU_BRUST.txt","r");					//add semicolon(;) after the last burst in CPU_BURST.txt FILE
+		while ((buff=fgetc(f))!=EOF)	
 		{
-			if(buf==' '||buf=='\n')
+			if(buff==' '||buff==';')
 			{
-				count++;
+				count++;								//Counting Number of WORDS
+			}
+			if(buff=='/')
+			{
+				break;
 			}
 		}
 		
@@ -48,9 +55,10 @@ main()
 		{
 			if(d[i].burst<0)
 			{
-				printf("\n\n\t-> Invalid Burst Time as: %d ", d[i].burst);
-				printf("\n\t-> Kindly Fix your Burst time in input file CPU_BRUST.txt");
-				exit(0);
+				printf("\n\n\t-> There are some -ve BURST TIME");
+				printf("\n\t-> Kindly verify from above TABLE, and");
+				printf("\n\t-> Fix your BURST TIME in input file CPU_BRUST.txt");
+				return 0;
 			}
 		}
 		
@@ -81,13 +89,27 @@ main()
 		}
 		printf("\t_________________________________________");
 		
-		printf("\n\t\tWT\t\tTAT\n");
+		
 		for(i=0;i<count;i++)											//Calculating TAT and WT
 		{
 			tat=d[i].burst+wt;
-			printf("\t\t%d\t\t%d\n", wt, tat);
 			avgt+=tat;
 			avgw+=wt;
 			wt=wt+d[i].burst;
-		}				
+		}
+		
+		printf("\n\n=> Gantt Chart");									//Printing Gantt Chart
+		printf("\n |");
+		for(i=0;i<count;i++)
+		printf(" P%d\t|",d[i].name);
+		printf("\n 0");
+		for(i=0;i<count;i++)
+		{
+		printf("\t%d",d[i].burst+twt);
+		twt=twt+d[i].burst;
+		}
+		
+		
+		printf("\n\n=> Average Waiting Time:\t\t%.3f", avgw/count);
+		printf("\n\n=> Average Turn Around Time:\t\t%.3f\n\n", avgt/count);					
 	}
