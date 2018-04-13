@@ -1,3 +1,10 @@
+/*
+	Preemptive Priority
+		By:-
+			SK Upadhyay
+*/
+
+
 #include<stdio.h>
 struct data
 {
@@ -20,11 +27,11 @@ void printnow(int);
 void print(int);
 int Burst(int);
 int shortBurst(int, int);
-
 main()
 {
-	int i,j,n,swapburst;
-	printf("\n\t> Preemptive Priority Scheduler<");
+	int i,j,n,swapburst,totalBurst,low;
+	float avgw, avgt;
+	printf("\n\t> Preemptive Priority Scheduler <");
 	printf("\n\t> Data Input");
 	printf("\n\t> Enter Total No. of Process:\t");
 	scanf("%d", &n);
@@ -40,6 +47,7 @@ main()
 		p[i].burst=d[i].burst;
 
 	}
+
 	for(i=0;i<n;i++)							        //Shorting Process
     {
         for(j=i;j<n;j++)
@@ -80,64 +88,55 @@ main()
 	}
 	system("cls");
 	print(n);
-
-	int totalBurst,low,pr;
-        totalBurst=Burst(n);
-	  for (i=0;i<totalBurst;i++)
-	   {
-		low=shortBurst(n,i);
-		 p[low].burst=p[low].burst - 1;
-		 for (j=0;j<n;j++)
+    totalBurst=Burst(n);
+    for(i=0;i<totalBurst;i++)
+    {
+        low=shortBurst(n,i);
+        p[low].burst=p[low].burst - 1;
+        for (j=0;j<n;j++)
 	  	{
-		 if( (low!=j) && (d[j].arrival<=i) && (p[j].status!=1) )
-		   {
-			 p[j].wait=p[j].wait+1;
-		   }
+	  	    if((low!=j)&&(d[j].arrival<=i)&&(p[j].status!=1))
+            {
+                p[j].wait=p[j].wait+1;
+            }
         }
-		 if(p[low].burst==0)
-		  {
+        if(p[low].burst==0)
+        {
 			p[low].status=1;
-		  }
-	   }
-	   printnow(n);
-    float sum=0.0,sum2=0.0;
-	 float ave, tat;
-
+        }
+    }
+    printnow(n);
 	 for (i=0;i<n;i++)
 	  {
-		sum=sum+p[i].wait;
-		sum2+=p[i].wait+d[i].burst;
+		avgw+=p[i].wait;
+		avgt+=(p[i].wait+d[i].burst);
 	  }
-	 ave = sum/n;
-	 tat=sum2/n;
-	 printf("\n\n\n \t Average Waiting Time : %0.2f",ave);
-	 printf("\n\n\n \t Average TurnAround Time : %0.2f",tat);
-
-
+	 printf("\n\n\n \t Average Waiting Time : %0.2f",avgw/n);
+	 printf("\n\n\n \t Average TurnAround Time : %0.2f\n\n",avgt/n);
 }
 
 void print(int n)
 {
 	int i;
 	printf("\n\t\t\t\t-> Stored Data <-");
-	printf("\n\t>-----------------------------------------------------------------------<");
-	printf("\n\t|\tPROCESS\t\tARRIVAL\t\tBURST\t\tPRIORITY\t|");
+	printf("\n\t\t>-------------------------------------------------------<");
+	printf("\n\t\t|\tPROCESS\t\tARRIVAL\t\tBURST\t\t|");
 	for(i=0;i<n;i++)
 	{
-		printf("\n\t|\t  P%d\t\t   %d\t\t  %d\t\t   %d\t\t|",d[i].name,d[i].arrival,d[i].burst,d[i].priority);
+		printf("\n\t\t|\t  P%d\t\t   %d\t\t  %d\t\t|",d[i].name,d[i].arrival,d[i].burst);
 	}
-	printf("\n\t>-----------------------------------------------------------------------<");
+	printf("\n\t\t>-------------------------------------------------------<");
 }
 
 void printnow(int n)
 {
 	int i;
-	printf("\n\t\t\t\t-> Stored Data <-");
+	printf("\n\t\t\t\t\t-> Processed Data <-");
 	printf("\n\t>-----------------------------------------------------------------------<");
-	printf("\n\t|\tPROCESS\t\tARRIVAL\t\tBURST\t\tPRIORITY\t\tWAIT\t|");
+	printf("\n\t|\tPROCESS\t\tARRIVAL\t\tBURST\t\tPRIORITY\t|");
 	for(i=0;i<n;i++)
 	{
-		printf("\n\t|\t  P%d\t\t   %d\t\t  %d\t\t   %d\t\t   %d\t\t|",d[i].name,d[i].arrival,d[i].burst,d[i].priority,p[i].wait);
+		printf("\n\t|\t  P%d\t\t   %d\t\t  %d\t\t   %d\t\t|",d[i].name,d[i].arrival,d[i].burst,d[i].priority);
 	}
 	printf("\n\t>-----------------------------------------------------------------------<");
 }
@@ -152,16 +151,17 @@ int Burst(int n)
 }
 int shortBurst(int n,int excutedtime)
 {
-    int i,min,pr;
+    int i,min,rtrn;
     min=10;
     for (i=0;i<n;i++)
     {
 		if( (p[i].status!=1) && (d[i].priority<min) && (d[i].arrival<=excutedtime))
 	 	{
 			min=p[i].burst;
-			pr=i;
+			rtrn=i;
 	 	}
     }
-    return pr;
+    return rtrn;
 }
+
 
