@@ -66,9 +66,10 @@ main()
     {
         for(j=i+1;j<n;j++)
         {
-            if(d[i].arrival==d[j].arrival)
+            if(d[i].arrival==d[j].arrival||d[i].arrival<0 ||d[i].burst<0)
             {
-                printf("\n\n\t-> Their are some processes having same arrival time\n\n");
+                printf("\n\n\t-> Their are some processes having same arrival time");
+                printf("\n\n\t-> or their are some -ve value of arrival or burst time\n\n");
             	return;
             }
         }
