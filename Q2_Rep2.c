@@ -75,17 +75,40 @@ main()
         }
     }
     
+	for(i=0;i<n;i++)															//Arrival time!=0
+	{
+		if (d[i].arrival==0)
+		{
+         	break;
+      	}
+   	}
+   	if(i==n)
+	{
+		printf("\n\n\t> There is no process with arrival time = 0\n\n");
+
+		return;
+	}
+
+
 	for(i=0;i<n;i++)							       							 //Shorting Process
     {
-        for(j=i;j<n;j++)
-        {
-            if(p[i].cburst>p[j].cburst)
-            {
-                swapburst=p[i].cburst;
-                p[i].cburst=p[j].cburst;
-                p[j].cburst=swapburst;
-            }
-        }
+    	if(d[i].burst>0)
+		{
+			for(j=i;j<n;j++)
+        	{
+            	if(p[i].cburst>p[j].cburst)
+            	{
+                	swapburst=p[i].cburst;
+                	p[i].cburst=p[j].cburst;
+                	p[j].cburst=swapburst;
+            	}
+        	}
+    	}
+    	else
+    	{
+    		printf("\n\n\t> There is a process with burst time = 0\n\n");
+			return;	
+		}
     }
     for(i=0;i<n;i++)
     {
@@ -241,7 +264,7 @@ void ganttchart(int n, int *gantt)													//To Print Gantt Chart
 			}
 		}
 	}
-	printf("\n  ||");
+	printf("\n   |");
 	for (i=0;i<n;i++)
 	{
 		if (i==0)
@@ -258,18 +281,18 @@ void ganttchart(int n, int *gantt)													//To Print Gantt Chart
 			}
 		}
 	}
-	  printf("||");
+	  printf("|");
  
 	 printf("\n");										//Complition Cum Response Time
 	 for (i=0;i<n;i++)
 	 {
 		if (i==0)
-			printf("  00  ");
+			printf("   0 ");
 		else
 		{
 		   if (gantt[i]!=gantt[i-1])
 		   {
-			  	printf("%0.2d  ",i);
+			  	printf("% d  ",i);
 			}
 		   else
 		   {
@@ -277,5 +300,5 @@ void ganttchart(int n, int *gantt)													//To Print Gantt Chart
 			}
 		 }
 	  }
-	  printf("%2d",n);	
+	  printf("%d",n);	
 }
